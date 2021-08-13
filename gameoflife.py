@@ -1,20 +1,8 @@
 import pygame
 import sys
 from random import randint
-
-
-DIM_SIZE = 100
-DIM = [DIM_SIZE*2, DIM_SIZE*2]
-pygame.init()
-screen = pygame.display.set_mode(DIM)
-surface = pygame.display.get_surface()
-
-pixelarr = []
-for x in range(DIM_SIZE):
-    temp = []
-    for y in range(DIM_SIZE):
-        temp.append(0)
-    pixelarr.append(temp)
+from time import sleep
+from pygame.constants import SCALED
 
 
 def genRandomPairs(m, n):
@@ -30,30 +18,7 @@ def genRandomPairs(m, n):
             x, y = randint(m, n), randint(m, n)
 
 
-g = genRandomPairs(0, DIM_SIZE-1)
-
-for _ in range(100):
-    x, y = next(g)
-    pixelarr[x][y] = 1
-
-for v in range(0, DIM_SIZE, 20):
-    for w in range(0, DIM_SIZE, 20):
-        for x in range(10):
-            for y in range(10):
-                pixelarr[v+x][w+y] = 1
-
-screen.fill((0, 0, 0))
-
-for x in range(DIM_SIZE):
-    for y in range(DIM_SIZE):
-        if pixelarr[x][y] == 1:
-            pygame.draw.circle(surface, (255, 255, 255), (x, y), 1)
-        else:
-            pygame.draw.circle(surface, (0, 0, 0), (x, y), 1)
-
-
-def updatePixels():
-    global pixelarr
+def updatePixels(pixelarr):
     temp_pixelarr = []
     for x in range(DIM_SIZE):
         temp = []
@@ -85,22 +50,63 @@ def updatePixels():
                 temp_pixelarr[x][y] = 0
             else:
                 temp_pixelarr[x][y] = 0
-    pixelarr = temp_pixelarr
+    return temp_pixelarr
 
 
-while 1:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit(0)
+DIM_SIZE = 100
+SCALE = 8
+DIM = [DIM_SIZE*SCALE, DIM_SIZE*SCALE]
+
+
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode(DIM)
+    surface = pygame.display.get_surface()
+
+    pixelarr = []
+    for x in range(DIM_SIZE):
+        temp = []
+        for y in range(DIM_SIZE):
+            temp.append(0)
+        pixelarr.append(temp)
+
+    g = genRandomPairs(0, DIM_SIZE-1)
+
+    for _ in range(2000):
+        x, y = next(g)
+        pixelarr[x][y] = 1
+
+    for v in range(0, DIM_SIZE, 20):
+        for w in range(0, DIM_SIZE, 20):
+            for x in range(10):
+                for y in range(10):
+                    pixelarr[v+x][w+y] = 1
+
+    screen.fill((0, 0, 0))
+
     for x in range(DIM_SIZE):
         for y in range(DIM_SIZE):
             if pixelarr[x][y] == 1:
-                # pygame.draw.circle(surface, (255,255,255), (x,y), 1)
-                pygame.draw.rect(surface, (255, 255, 255),
-                                 pygame.Rect(x*2+1, y*2+1, 2, 2))
+                pygame.draw.circle(surface, (255, 255, 255), (x, y), 1)
             else:
-                pygame.draw.rect(surface, (0, 0, 0),
-                                 pygame.Rect(x*2+1, y*2+1, 2, 2))
-    pygame.display.flip()
-    updatePixels()
-    # sleep(0.3)
+                pygame.draw.circle(surface, (0, 0, 0), (x, y), 1)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+        for x in range(DIM_SIZE):
+            for y in range(DIM_SIZE):
+                if pixelarr[x][y] == 1:
+                    pygame.draw.rect(surface, (255, 255, 255),
+                                     pygame.Rect(x*SCALE+1, y*SCALE+1, SCALE, SCALE))
+                else:
+                    pygame.draw.rect(surface, (0, 0, 0),
+                                     pygame.Rect(x*SCALE+1, y*SCALE+1, SCALE, SCALE))
+        pygame.display.flip()
+        pixelarr = updatePixels(pixelarr)
+        sleep(0.1)
+
+
+if __name__ == '__main__':
+    main()
