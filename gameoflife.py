@@ -54,13 +54,14 @@ def updatePixels(pixelarr):
 
 
 DIM_SIZE = 100
-SCALE = 8
+SCALE = 4
 DIM = [DIM_SIZE*SCALE, DIM_SIZE*SCALE]
 
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode(DIM)
+    pygame.display.set_caption("Game of Life")
     surface = pygame.display.get_surface()
 
     pixelarr = []
@@ -72,7 +73,7 @@ def main():
 
     g = genRandomPairs(0, DIM_SIZE-1)
 
-    for _ in range(2000):
+    for _ in range(4000):
         x, y = next(g)
         pixelarr[x][y] = 1
 

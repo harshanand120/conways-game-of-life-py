@@ -10,3 +10,7 @@ The Game of Life, also known simply as Life, is a cellular automaton devised by 
 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
 This implementation uses PyGame Module to draw the screen and uses basic list operations to implement the rules in an infinite loop.
+
+## Demo
+
+![Alt Text](demo.gif)
